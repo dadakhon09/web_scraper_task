@@ -1,0 +1,70 @@
+definitions:
+  models.Obj:
+    properties:
+      link:
+        type: string
+      title:
+        type: string
+    type: object
+  models.Request:
+    properties:
+      number:
+        type: integer
+    type: object
+  models.Response:
+    properties:
+      num_of_failed_calls:
+        type: integer
+      num_of_success_calls:
+        type: integer
+      titles:
+        items:
+          $ref: '#/definitions/models.Obj'
+        type: array
+    type: object
+  models.ResponseError:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /task:
+    post:
+      consumes:
+      - application/json
+      description: Takes an integer that represents the number of threads
+      parameters:
+      - description: number of threads/goroutines
+        in: body
+        name: number
+        required: true
+        schema:
+          $ref: '#/definitions/models.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ResponseError'
+      summary: RESTful API endpoint
+      tags:
+      - task
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
